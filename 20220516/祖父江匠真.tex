@@ -27,20 +27,21 @@
 }
 \begin{document}
 
-{\noindent\small 第2回報告書 \hfill\today}
+{\noindent\small 第3回報告書 \hfill\today}
 \begin{center}
-  {\Large Elasticsearchサーバーの調査}
+  {\Large CSVデータをElasticsearchサーバーに移行するプログラムの開発}
 \end{center}
 \begin{flushright}
   祖父江匠真 \\
 \end{flushright}
 
 \section{はじめに}
-今回は, DougoSyou配下にある, CSV形式で保存された太陽光発電の環境データをElasticsearchサーバーに移行するプログラムを開発した.
+今回は, (ここにリソース元をより詳しく明記する)DougoSyou配下にある, CSV形式で保存された太陽光発電の環境データをElasticsearchサーバーに移行するプログラムを開発した.
 
 \section{CSVデータをElasticsearchサーバーに移行するプログラムの開発}
 今回, データ移行に使用したCSVデータの一部を図\ref{p1}に示す.
 図\ref{p1}のCSVデータには, TIME, 日射強度, 外気温度, 直流電力, 交流電力のカラムが存在する.
+なお, TIMEは計測日時であると推定される.
 
 \begin{figure}[H]
   \begin{center}
@@ -50,13 +51,12 @@
   \end{center}
 \end{figure}
 
-なお, TIMEは計測日時であると推定される.
-それぞれのカラムは, 現在リサイクル館から送信されている太陽光の環境データを保存するElasticsearchサーバーのインデックスにおける, JPtime, solarIrradiance(\si{\kilo\watt}/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo\watt}), ac-pw(\si{\kilo\watt})フィールドと対応する.
+それぞれのカラムは, 現在リサイクル館から送信されている太陽光発電の環境データを保存するElasticsearchサーバーのインデックスにおける, JPtime, solarIrradiance(\si{\kilo}w/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo}w), ac-pw(\si{\kilo}w)フィールドと対応する.
 
-ソースコード\ref{sc1}は, 移行先のElasticsearchサーバーのインデックスを作成するプログラムである.
-既存のElasticsearchサーバーのインデックスとの互換性を考慮して, 今回開発する移行プログラムの移行先のフィールド名は, JPtime, solarIrradiance(\si{\kilo\watt}/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo\watt}), ac-pw(\si{\kilo\watt})としている.
+ソースコード\ref{sc1}は, 移行先となるElasticsearchサーバーのインデックスを作成するプログラムである.
+既存のElasticsearchサーバーのインデックスとの互換性を考慮して, 今回開発する移行プログラムでインデックスに追加するドキュメントのフィールド名は, JPtime, solarIrradiance(\si{\kilo}w/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo}w), ac-pw(\si{\kilo}w)としている.
 
-\begin{lstlisting}[caption=太陽光発電データを保存する為のインデックスを作成するプログラム, label=sc1]
+\begin{lstlisting}[caption=CSVデータの移行先となるインデックスを作成するプログラム, label=sc1]
 from elasticsearch import Elasticsearch
 
 # Elasticsearchクライアント作成
@@ -86,8 +86,10 @@ es.indices.create(index="solars", body=mapping)
 # 内部接続を閉じる
 es.close()
 \end{lstlisting}
-ソースコード\ref{sc2}は,\ref{sc1}で作成したインデックスにCSV形式のデータを移行プログラムである.
-Pythonのdatetimeモジュールで生成されるDateオブジェクトを, デフォルト設定のままElasticsearchに保存すると, Kibana上でUTC時間として扱われ, ブラウザ環境からタイムゾーンをAsia/Tokyoとして推定し, 自動的にUTC時間からJST時間に変換して9時間進んで表示するので, Python上でDateオブジェクトを作成する際に, タイムゾーンをJST時間にしておく必要がある.
+ソースコード\ref{sc2}は,ソースコード\ref{sc1}で作成したインデックスにCSVデータを移行プログラムである.
+Pythonのdatetimeモジュールで生成されるDateオブジェクトを, デフォルト設定のままElasticsearchに保存すると, Kibana上でUTC時間として扱われる.
+更に, ブラウザ環境からタイムゾーンをAsia/Tokyoと推定し, 自動的にUTC時間からJST時間に変換するので9時間進んで表示されてしまう.
+この現象の対策として, ソースコード\ref{sc2}の26行目では, Dateオブジェクトを作成する際に, JST時間に設定している.
 
 \begin{lstlisting}[caption=CSV形式の太陽光発電データをElasticsearchサーバーに移行するプログラム, label=sc2]
 from elasticsearch import Elasticsearch
@@ -128,11 +130,12 @@ with codecs.open(filepath, "r", "Shift-JIS", "ignore") as file:
 es.close()
 \end{lstlisting}
 
-ソースコード\ref{sc2}の実行によって追加されたドキュメントを図\ref{p2}に示す.
+ソースコード\ref{sc2}の実行によってインデックスに追加されたドキュメントを図\ref{p2}に示す.
+図\ref{p2}より, ドキュメント数が43199であることが分かるが, 今回使用したCSVデータは2018年9月1日から2018年9月30日までの間, 1分ごとに計測されたデータであるので, 計測回数とドキュメント数が一致していることから, 全てのCSVデータを正しくElasticsearchサーバーに移行できたことが分かる.
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=160mm]{csv.png}
+    \includegraphics[width=160mm]{kibana.png}
     \caption{移行後の太陽光発電の環境データ}
     \label{p2}
   \end{center}
