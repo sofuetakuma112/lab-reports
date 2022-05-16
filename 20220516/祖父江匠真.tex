@@ -51,10 +51,10 @@
   \end{center}
 \end{figure}
 
-それぞれのカラムは, 現在リサイクル館から送信されている太陽光発電の環境データを保存するElasticsearchサーバーのインデックスにおける, JPtime, solarIrradiance(\si{\kilo}w/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo}w), ac-pw(\si{\kilo}w)フィールドと対応する.
+それぞれのカラムは, 現在リサイクル館から送信されている太陽光発電の環境データを保存するElasticsearchサーバーのインデックスにおける, JPtime, solarIrradiance(\si{\kilo{}}w/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo{}}w), ac-pw(\si{\kilo{}}w)フィールドと対応する.
 
 ソースコード\ref{sc1}は, 移行先となるElasticsearchサーバーのインデックスを作成するプログラムである.
-既存のElasticsearchサーバーのインデックスとの互換性を考慮して, 今回開発する移行プログラムでインデックスに追加するドキュメントのフィールド名は, JPtime, solarIrradiance(\si{\kilo}w/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo}w), ac-pw(\si{\kilo}w)としている.
+既存のElasticsearchサーバーのインデックスとの互換性を考慮して, 今回開発する移行プログラムでインデックスに追加するドキュメントのフィールド名は, JPtime, solarIrradiance(\si{\kilo{}}w/\si{\metre\squared}), airTemperature(\si{\degreeCelsius}), dc-pw(\si{\kilo{}}w), ac-pw(\si{\kilo{}}w)としている.
 
 \begin{lstlisting}[caption=CSVデータの移行先となるインデックスを作成するプログラム, label=sc1]
 from elasticsearch import Elasticsearch
