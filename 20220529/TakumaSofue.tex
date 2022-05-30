@@ -49,7 +49,7 @@ import datetime
 import os
 
 
-def fetchDocsByDatetime(dt_crr, filePath):
+def fetchDocsByDatetime(dt, filePath):
     es = Elasticsearch("http://133.71.201.197:9200", http_auth=("takenaka", "takenaka"))
 
     indexName = "pcs_recyclekan"
@@ -58,14 +58,14 @@ def fetchDocsByDatetime(dt_crr, filePath):
     if os.path.isfile(filePath):
         return
 
-    dt_next = dt_crr + datetime.timedelta(days=1)
+    dt_next = dt + datetime.timedelta(days=1)
     query = {
         "query": {
             "range": {
                 "JPtime": {
-                    "gte": f"{dt_crr.year}-{str(dt_crr.month).zfill(2)}-{str(dt_crr.day).zfill(2)}T00:00:00",
+                    "gte": f"{dt.year}-{str(dt.month).zfill(2)}-{str(dt.day).zfill(2)}T00:00:00",
                     "lt": f"{dt_next.year}-{str(dt_next.month).zfill(2)}-{str(dt_next.day).zfill(2)}T00:00:00",
-                },  # JST時間をUTC時間として登録しているのでUTC時間として検索する必要がある
+                },
             }
         }
     }
@@ -98,9 +98,9 @@ def fetchDocsByDatetime(dt_crr, filePath):
 
 \section{実測値と計算値をプロットする}
 ソースコード\ref{sc1}によって取得したElasticsearchサーバーの日射量データと, 計算によって求めた日射量データをプロットしたものを図\ref{p1}に示す.
-図\ref{p1}はElasticsearchサーバーから取得した2022年5月3日の日射量データと, 2022年5月3日のリサイクル館の緯度経度を入力として求めた日射量の計算値をプロットしている.
-また, Elasticsearchサーバーから取得したドキュメント数は約45000件であったが全てをプロットするとPCがフリーズしてしまったので, 1分辺り1件にドキュメントを絞り込んでプロットしている.
-更に, 実測値と計算値の最大値が等しくなるよう, 計算値の縦軸のスケールを実測値と計算値の比率を元に変更している.
+図\ref{p1}はElasticsearchサーバーから取得した2022年5月3日の日射量データと, リサイクル館の緯度経度と日付情報(2022年5月3日)を入力として求めた日射量の計算値をプロットしている.
+また, Elasticsearchサーバーから取得したドキュメント数は約45000件であったが全てをプロットするとMatplotlibによって表示したグラフ画面がフリーズしてしまったので, 1分辺り1件にドキュメントを絞り込んでプロットしている.
+更に, 実測値と計算値の日射量の最大値が等しくなるよう, 計算値の縦軸のスケールを実測値と計算値の比率を元に変更している.
 
 \begin{figure}[H]
   \begin{center}
@@ -127,7 +127,7 @@ def fetchDocsByDatetime(dt_crr, filePath):
 計算値による時刻の推定に最大で約59分の誤差が生じていることが分かったので, 次回までに日射量の計算式を再検討する.
 
 \begin{thebibliography}{5}
-  \bibitem{1}祖父江匠真，"第4回報告書", Teams内，参照 May 30, 2022.
+  \bibitem{1}Blacknon, "PythonでElasticsearch5からscrollを使って検索結果をすべて取得する", "https://orebibou.com/ja/home/201803/20180302\_001/", 参照 May 30, 2022.
 \end{thebibliography}
 
 \end{document}
