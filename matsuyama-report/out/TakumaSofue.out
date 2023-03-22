@@ -2,7 +2,7 @@
 \BOOKMARK [1][-]{section.1}{概要}{}% 1
 \BOOKMARK [1][-]{section.2}{相互相関とは}{}% 2
 \BOOKMARK [1][-]{section.3}{理論データのシミュレーション方法について}{}% 3
-\BOOKMARK [1][-]{section.4}{時刻合わせプログラムの実装に関する検討}{}% 4
-\BOOKMARK [2][-]{subsection.4.1}{指定期間外の日射量を0に置き換える実測データの前処理}{section.4}% 5
+\BOOKMARK [1][-]{section.4}{時刻合わせプログラムのアルゴリズムに関する検討}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{指定時間帯外の日射量を0に置き換える実測データの前処理}{section.4}% 5
 \BOOKMARK [2][-]{subsection.4.2}{実測データに対する特定の日射量によるフィルタリングおよび日射量の減算}{section.4}% 6
 \BOOKMARK [1][-]{section.5}{まとめ}{}% 7
