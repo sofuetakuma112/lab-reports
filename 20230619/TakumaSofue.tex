@@ -60,18 +60,18 @@ SQLiteデータベースはリレーショナルデータベースの一種で�
 \subsection{データのインポート}
 重複データ削除後のデータが保存されたSQLiteテーブルからすべてのレコードを読み出して, ターゲットのElasticSearchサーバーに移行した.
 
-その際, pythonのelasticsearchライブラリを使用し, タイムスタンプが2023年より以前のデータは2022_co2という名前のインデックスに保存し, 2023年のものは2023_co2という名前のインデックスに保存した.
+その際, pythonのelasticsearchライブラリを使用し, タイムスタンプが2023年より以前のデータは2022\_co2という名前のインデックスに保存し, 2023年のものは2023\_co2という名前のインデックスに保存した.
 
 \section{kibanaによるデータの可視化}
 
 移行後のデータをkibanaを用いて可視化した.
 
-2022_co2インデックスと, 2023_co2インデックスについて, 横軸をタイムスタンプとし, 縦軸をPPM, RH, TEMPとしてそれぞれプロットしたものを図 \ref{p1} 〜 図 \ref{p6}に示す.
+2022\_co2インデックスと, 2023\_co2インデックスについて, 横軸をタイムスタンプとし, 縦軸をPPM, RH, TEMPとしてそれぞれプロットしたものを図 \ref{p1} 〜 図 \ref{p6}に示す.
 
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{2022_ppm.png}
-    \caption{2022_co2のPPM}
+    \caption{2022\_co2のPPM}
     \label{p1}
   \end{center}
 \end{figure}
@@ -79,7 +79,7 @@ SQLiteデータベースはリレーショナルデータベースの一種で�
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{2022_rh.png}
-    \caption{2022_co2のRH}
+    \caption{2022\_co2のRH}
     \label{p2}
   \end{center}
 \end{figure}
@@ -87,7 +87,7 @@ SQLiteデータベースはリレーショナルデータベースの一種で�
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{2022_temp.png}
-    \caption{2022_co2のTEMP}
+    \caption{2022\_co2のTEMP}
     \label{p3}
   \end{center}
 \end{figure}
@@ -95,7 +95,7 @@ SQLiteデータベースはリレーショナルデータベースの一種で�
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{2023_ppm.png}
-    \caption{2023_co2のPPM}
+    \caption{2023\_co2のPPM}
     \label{p4}
   \end{center}
 \end{figure}
@@ -103,7 +103,7 @@ SQLiteデータベースはリレーショナルデータベースの一種で�
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{2023_rh.png}
-    \caption{2023_co2のRH}
+    \caption{2023\_co2のRH}
     \label{p5}
   \end{center}
 \end{figure}
@@ -111,7 +111,7 @@ SQLiteデータベースはリレーショナルデータベースの一種で�
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{2023_temp.png}
-    \caption{2023_co2のTEMP}
+    \caption{2023\_co2のTEMP}
     \label{p6}
   \end{center}
 \end{figure}
