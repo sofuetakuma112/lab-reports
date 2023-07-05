@@ -41,7 +41,7 @@
 \end{flushright}
 
 \section{概要}
-今回は, 前回に引き続きElasticSearchサーバー間でのデータ移行とkibanaを用いた可視化結果について報告する.
+今回は, 前回に引き続き133.71.106.168から133.71.106.141へのElasticSearchサーバー間のデータ移行とkibanaを用いた可視化結果について報告する.
 また, 移行元ElasticSearchサーバーにあったCO\textsubscript{2}データ以外のデータの移行についても報告する.
 
 \section{CO\textsubscript{2}データの移行作業}
@@ -83,7 +83,7 @@
 
 \section{CO\textsubscript{2}データ以外のデータの移行について}
 
-移行元のElasticSearchサーバーにはCO\textsubscript{2}データ以外に以下のインデックスがあった.
+移行元のElasticSearchサーバーにはインデックス名にco2という文字列を含むインデックス以外に以下のインデックスがあった.
 
 \begin{itemize}
   \item movement\_diary
@@ -93,11 +93,17 @@
   \item test
 \end{itemize}
 
-これらのインデックスの内, temp2, temp3はTIME, TEMP, HUMIフィールドを持ったドキュメントが格納されており, temp2のドキュメント数は約150件, temp3は約60件であった.
-testはJPtime, PPM, RH, TEMP, ip, number, utctimeフィールドを持ったドキュメントを格納しているインデックスである.
-従って, temp2, temp3, testインデックスはCO\textsubscript{2}データの収集の研究の中で動作確認目的に作成されたインデックスではないかと考えられる.
+これらのインデックスのデータ移行は, 同名のインデックスを移行先のElasticSearchサーバーに作成して, 作成したインデックスにデータを挿入することで行った.
 
-movement\_diaryとmovement\_diary01は運行日誌に関する情報を格納したインデックスであり, movement\_diaryは以下のような構造をしたデータである.
+ただし, testインデックスは移行先のElasticSearchサーバーに既に同名のインデックスが作成されていたので, 133.71.106.168\_testというインデックス名にした.
+
+次に, 上記のインデックスに保存されているデータについて説明する.
+
+temp2, temp3はTIME, TEMP, HUMIフィールドを持ったドキュメントが格納されており, temp2のドキュメント数は約150件, temp3は約60件であった.
+testはJPtime, PPM, RH, TEMP, ip, number, utctimeフィールドを持ったドキュメントを格納しているインデックスであり, ドキュメント数は95件であった.
+これらの情報から, temp2, temp3, testインデックスはCO\textsubscript{2}データの収集の研究の中で動作確認目的に作成されたインデックスではないかと考えられる.
+
+movement\_diaryとmovement\_diary01は運行日誌に関する情報を格納したインデックスであり, それぞれ以下のような構造のドキュメントが保存されている.
 
 \begin{lstlisting}[caption=movement\_diaryのドキュメントデータ, label=sc1]
   {
@@ -139,8 +145,8 @@ movement\_diaryとmovement\_diary01は運行日誌に関する情報を格納し
 }
 \end{lstlisting}
 
-movement\_diary01は, 基本的にmovement\_diaryと同じフィールド, 同じ値のデータを格納しているが, フィールド"driver"と"destination"の値の型が異なっている.
-movement\_diaryのドキュメントではそれぞれ単一の値を持っているが, movement\_diary01のドキュメントではそれぞれ配列の形式で値が格納されている. また、movement\_diary01のドキュメントにはフィールド "charge\_place"、"battery\_rate"、"battery\_rate\_distance" が追加されており, "passenger"が削除されている.
+% movement\_diary01は, 基本的にmovement\_diaryと同じフィールド, 同じ値のデータを格納しているが, フィールド"driver"と"destination"の値の型が異なっている.
+% movement\_diaryのドキュメントではそれぞれ単一の値を持っているが, movement\_diary01のドキュメントではそれぞれ配列の形式で値が格納されている. また, movement\_diary01のドキュメントにはフィールド "charge\_place", "battery\_rate", "battery\_rate\_distance" が追加されており, "passenger"が削除されている.
 
 \begin{lstlisting}[caption=movement\_diary01のドキュメントデータ, label=sc1]
   {
@@ -191,7 +197,40 @@ movement\_diaryのドキュメントではそれぞれ単一の値を持って�
 }
 \end{lstlisting}
 
-これらのインデックスの移行は, 同名のインデックスを移行先のElasticSearchサーバーに作成して, 作成したインデックスにデータを移すことで行った.
+以下にmovement\_diaryとmovement\_diary01のドキュメントの違いを列挙する.
+
+\begin{enumerate}
+\item driverフィールド: 
+\begin{itemize}
+\item movement\_diaryのドキュメントでは, driverフィールドは文字列である.
+\item movement\_diary01のドキュメントでは, driverフィールドは配列で, その中に文字列と2つのnull値が含まれている.
+\end{itemize}
+
+\item ``destination''フィールド: 
+\begin{itemize}
+\item movement\_diaryのドキュメントでは, ``destination''フィールドは単一の文字列である.
+\item movement\_diary01のドキュメントでは, ``destination''フィールドは配列で, その中に2つの文字列が含まれている.
+\end{itemize}
+
+\item ``charge\_place''フィールド: 
+\begin{itemize}
+\item movement\_diaryのドキュメントには, ``charge\_place''フィールドは存在しない.
+\item movement\_diary01のドキュメントでは, ``charge\_place''フィールドが追加されているが, その値は空文字列（``''）である.
+\end{itemize}
+
+\item ``battery\_rate''フィールド: 
+\begin{itemize}
+\item movement\_diaryのドキュメントには, ``battery\_rate''フィールドは存在しない.
+\item movement\_diary01のドキュメントでは, ``battery\_rate''フィールドが追加されており, その値は数値である.
+\end{itemize}
+
+\item ``battery\_rate\_distance''フィールド: 
+\begin{itemize}
+\item movement\_diaryのドキュメントには, ``battery\_rate\_distance''フィールドは存在しない.
+\item movement\_diary01のドキュメントでは, ``battery\_rate\_distance''フィールドが追加されており, その値は数値である.
+\end{itemize}
+
+\end{enumerate}
 
 \section{まとめ}
 今回は, ElasticSearchサーバー間でのデータ移行とkibanaを用いた可視化結果について報告した.
