@@ -42,7 +42,7 @@
 
 \section{概要}
 今回は, 133.71.201.197から133.71.106.141へのElasticSearchサーバー間のリサイクル館の太陽光パネルの測定データ移行とkibanaを用いた可視化結果について報告する.
-また, 133.71.106.168のElasticSearchサーバーにあったmovement\_diaryインデックスとmovement\_diary01インデックスのドキュメントのついて調査した結果も報告する.
+また, 133.71.106.168のElasticSearchサーバーにあったmovement\_diaryインデックスとmovement\_diary01インデックスのドキュメントについて調査した結果も報告する.
 
 \section{データ移行手順について}
 
@@ -51,13 +51,13 @@
 そこで一度, 移行元のElasticSearchサーバーのデータをローカルマシンにエクスポートして, 重複データを取り除いた上で, 移行先のElasticSearchサーバーにデータをアップロードした.
 
 \subsection{データのエクスポート}
-移行元のElasticSearchサーバーのデータのローカルマシンへのエクスポートには, elasticdump \cite{1}ライブラリを使用してJSON形式でエクスポートした.その際, co2という文字列を含むインデックスのデータのみをエクスポートした.
+移行元のElasticSearchサーバーのデータのローカルマシンへのエクスポートには, elasticdump \cite{1}ライブラリを使用してJSON形式でエクスポートした.その際, pcs\_recyclekanという名前のインデックスのデータをエクスポートした.
 
 \subsection{データの重複削除}
 重複データの削除は, 予めローカルマシンにJSON形式でダンプしていたデータと, elasticdumpライブラリを使用してJSON形式でエクスポートしたデータを, utctimeフィールドの値がユニークになるようにフィルタリングすることで行った.
 
 \subsection{データのインポート}
-重複データ削除後のデータを保存したJSONファイルを読み出して, ターゲットのElasticSearchサーバーに移行した.
+重複データ削除後のデータを保存したJSONファイルを読み出して, 移行先のElasticSearchサーバーにアップロードした.
 
 その際, pythonのelasticsearchライブラリを使用し,133.71.201.197のElasticSearchサーバーと同名のpcs\_recyclekanという名前のインデックスに保存した.
 
