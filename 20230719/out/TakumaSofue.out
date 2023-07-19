@@ -1,0 +1,9 @@
+%このファイルは日本語文字を含みます.
+\BOOKMARK [1][-]{section.1}{概要}{}% 1
+\BOOKMARK [1][-]{section.2}{データ移行手順について}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{データのエクスポート}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{データの重複削除}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{データのインポート}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{kibanaによるデータの可視化}{}% 6
+\BOOKMARK [1][-]{section.4}{movement\137diaryのデータについて}{}% 7
+\BOOKMARK [1][-]{section.5}{まとめ}{}% 8
