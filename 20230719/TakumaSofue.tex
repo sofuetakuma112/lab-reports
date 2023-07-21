@@ -88,13 +88,13 @@
 図 \ref{p1}, 図 \ref{p2}について, 2022年8月以降のグラフの概形が一致していることが確認出来るので, データ移行作業は正常に行うことが出来たと判断できる.
 
 \section{movement\_diaryのデータについて}
-movement\_diaryとmovement\_diary01は一部のフィールドを除いてほとんど同じデータを保有しているため, それぞれのインデックスのドキュメント数の比較と, タイムスタンプ情報を格納するフィールドをインデックス間の比較を行うことで, movement\_diaryが不要なインデックスであるかを調査した.
+movement\_diaryとmovement\_diary01はデータ型が異なる一部のフィールドを除いて全て同じデータを保有しており, それぞれのインデックスのドキュメント数の比較と, タイムスタンプ情報を格納するフィールドのインデックス間での比較を行うことで, movement\_diaryが不要なインデックスであるかを調査した.
 
 まず, movement\_diaryとmovement\_diary01のドキュメント数を調べたところ, 同じ142件であった.
 
 次に, movement\_diaryとmovement\_diary01でタイムスタンプ情報を持つフィールドであるdt\_Sフィールドの値同士を比較した.
 
-ただし, dt\_Sフィールドがnullのドキュメントが一部存在するので, その場合はinspectionフィールドの値同士を比較した.
+ただし, dt\_Sフィールドがnullのドキュメントが一部存在するので, その場合はタイムスタンプ情報を持つinspectionフィールドの値同士を比較した.
 
 比較した結果, dt\_Sフィールドとinspectionフィールドの両方がnullである3件のドキュメントを除いて他全てのドキュメントはdt\_Sフィールドもしくはinspectionフィールドの値がmovement\_diaryとmovement\_diary01の間で一致した.
 
@@ -109,7 +109,7 @@ dt\_Sフィールドとinspectionフィールドの両方がnullだった3件の
 
 調査結果より, movement\_diary01インデックスはmovement\_diaryインデックスの持つ全ての情報を保持しており, movement\_diaryインデックスは削除して良いインデックスであると判断した.
 
-次週は, 133.71.201.197のElasticSearchサーバーにあるpcs\_recyclekanという名前のインデックス以外のインデックスについて調査を行い, 必要であればデータ移行を行う.
+次回は, 133.71.201.197のElasticSearchサーバーにあるpcs\_recyclekanという名前のインデックス以外のインデックスについて調査を行い, 必要であればデータ移行を行う.
 
 \begin{thebibliography}{5}
   \bibitem{1}Ferron H, ”ElasticDump”, https://github.com/elasticsearch-dump/elasticsearch-dump, 参照 June 19,2023.
