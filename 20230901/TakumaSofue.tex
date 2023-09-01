@@ -87,7 +87,7 @@
   \end{itemize}
 \end{itemize}
 
-なお, leaf, leaf\_grid, leaf\_loadインデックスについて, Kibanaで各インデックスのマッピング情報を確認したところ, 3つともすべて同じマッピング情報を保持しており, 同じフィールドをを持つドキュメンとをそれぞれのインデックスで保存していることが分かった.
+なお, leaf, leaf\_grid, leaf\_loadインデックスについて, Kibanaで各インデックスのマッピング情報を確認したところ, 3つともすべて同じマッピング情報を保持しており, 同じフィールドを持つドキュメントをそれぞれのインデックスで保存していることが分かった.
 
 leaf, leaf\_grid, leaf\_loadインデックスのマッピング情報をリスト\ref{sc1}に示す.
 
@@ -171,17 +171,17 @@ leaf, leaf\_grid, leaf\_loadインデックスのマッピング情報をリス�
   }
 \end{lstlisting}
 
-pcs\_testインデックスとpcs\_test4インデックスに関しては, 検証用途で使用しているものであるため, 今回の移行対象からは除外し, pcs\_log, leaf, leaf\_load, leaf\_gridインデックスのみを移行対象とした.
+pcs\_testインデックスとpcs\_test4インデックスに関しては, 恵村君が検証用途で使用しているものであるため, 今回の移行対象からは除外し, pcs\_log, leaf, leaf\_load, leaf\_gridインデックスのみを移行対象とした.
 
 \section{データ移行手順について}
 
-データ移行手順について, まず移行元のElasticSearchサーバーのデータをローカルマシンにエクスポートして, 移行先のElasticSearchサーバーにデータをインサートした.
+データ移行手順について, まず移行元のElasticSearchサーバーのデータをローカルマシンにJSON形式でエクスポートして, 作成したPythonプログラムを実行して移行先のElasticSearchサーバーにデータをインサートした.
 
 \subsection{データのエクスポート}
 移行元のElasticSearchサーバーのデータのローカルマシンへのエクスポートには, elasticdump \cite{1}ライブラリを使用してJSON形式でエクスポートした.その際, pcs\_log, leaf, leaf\_load, leaf\_gridという名前のインデックスのデータをエクスポートした.
 
 \subsection{データのインポート}
-ダンプしたJSONファイルを作成したPythonプログラムで読み込んで, Pythonのelasticsearchライブラリを用いて移行先のElasticSearchサーバーにインサートした.
+エクスポートしたJSONファイルを, 作成したPythonプログラムから読み込んで, Pythonのelasticsearchライブラリを用いて移行先のElasticSearchサーバーにインサートした.
 
 移行先のElasticSearchサーバーにおけるインデックス名については, 133.71.201.197のElasticSearchサーバーと同名のインデックスに保存した.
 
