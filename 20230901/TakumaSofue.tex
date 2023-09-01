@@ -147,7 +147,7 @@ pcs\_testインデックスとpcs\_test4インデックスに関しては, 検�
 
 pcs\_logインデックスは, 継続して133.71.201.197のElasticSearchサーバーにデータがインサートされているので, 恵村君が133.71.106.141のElasticSearchサーバーのpcs\_logインデックスにデータをインサートするようシステムの対応を行った時点で, 追加のデータ移行を行う必要がある.
 
-次回は, 以前CO\textsubscript{2}データを移行した際にElasticSearchのBulk APIを使用してローカルからデータをインサートしたことが原因で, ラズベリーパイ上で実行しているデータインサート用のプログラムからインサートが出来なくなった問題について, 以前データ移行を行ったpcs\_recyclekanインデックスについてもBulk APIを使用しており, 将来同じ問題が発生する可能性があるため, 解決方法を調査する.
+次回は, 以前CO\textsubscript{2}データを移行した際にElasticSearchのBulk APIを使用してデータ移行を行ったことが原因で, ラズベリーパイ上で実行しているCO\textsubscript{2}データのインサート用のプログラムから移行先のElasticSearchサーバーのインデックスにインサートが出来なくなった問題について, 以前データ移行を行ったpcs\_recyclekanインデックスについてもBulk APIを使用しており, 将来同じ問題が発生する可能性があるため, 解決方法を調査する.
 
 \begin{thebibliography}{5}
   \bibitem{1}Ferron H, ”ElasticDump”, https://github.com/elasticsearch-dump/elasticsearch-dump, 参照 June 19,2023.
