@@ -87,6 +87,90 @@
   \end{itemize}
 \end{itemize}
 
+なお, leaf, leaf\_grid, leaf\_loadインデックスについて, Kibanaで各インデックスのマッピング情報を確認したところ, 3つともすべて同じマッピング情報を保持しており, 同じフィールドをを持つドキュメンとをそれぞれのインデックスで保存していることが分かった.
+
+leaf, leaf\_grid, leaf\_loadインデックスのマッピング情報をリスト\ref{sc1}に示す.
+
+\begin{lstlisting}[caption=leafと名の付くインデックスが持つマッピング情報,label=sc1]
+  {
+    "mappings": {
+      "_doc": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "A1": {
+            "type": "float"
+          },
+          "A2": {
+            "type": "float"
+          },
+          "F": {
+            "type": "float"
+          },
+          "JPtime": {
+            "type": "date"
+          },
+          "P": {
+            "type": "float"
+          },
+          "P1": {
+            "type": "float"
+          },
+          "P2": {
+            "type": "float"
+          },
+          "PF": {
+            "type": "float"
+          },
+          "PF1": {
+            "type": "float"
+          },
+          "PF2": {
+            "type": "float"
+          },
+          "Q": {
+            "type": "float"
+          },
+          "Q1": {
+            "type": "float"
+          },
+          "Q2": {
+            "type": "float"
+          },
+          "S": {
+            "type": "float"
+          },
+          "S1": {
+            "type": "float"
+          },
+          "S2": {
+            "type": "float"
+          },
+          "V1": {
+            "type": "float"
+          },
+          "V2": {
+            "type": "float"
+          },
+          "data_time": {
+            "type": "date"
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+\end{lstlisting}
+
 pcs\_testインデックスとpcs\_test4インデックスに関しては, 検証用途で使用しているものであるため, 今回の移行対象からは除外し, pcs\_log, leaf, leaf\_load, leaf\_gridインデックスのみを移行対象とした.
 
 \section{データ移行手順について}
