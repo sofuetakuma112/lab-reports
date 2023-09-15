@@ -41,7 +41,7 @@
 \end{flushright}
 
 \section{概要}
-今回は, 133.71.201.197のElasticSearchサーバーにあるpcs\_recyclekanという名前のインデックス以外のインデックスについて調査を行い, 133.71.106.141のElasticSearchサーバーにデータ移行を行った.
+今回は, 133.71.201.197のElasticSearchサーバーにあるpcs\_recyclekanという名前のインデックス以外のインデックスについて調査を行い, 133.71.106.141のElasticSearchサーバーにデータ移行を行ったことについて報告する.
 
 \section{133.71.201.197のElasticSearchサーバーにあるインデックスについて}
 図 \ref{p1}に133.71.201.197のElasticSearchサーバーにあるインデックスの一覧を示す.
@@ -227,11 +227,13 @@ pcs\_testインデックスとpcs\_test4インデックスに関しては, 恵�
 \end{figure}
 
 \section{まとめ}
-今回は, 133.71.201.197のElasticSearchサーバーにあるpcs\_log, leaf, leaf\_load, leaf\_gridインデックスを133.71.106.141のElasticSearchサーバーにデータ移行して, 各インデックスのドキュメント数を比較することでデータ移行が正常に行えたことを報告した.
+今回は, 133.71.201.197のElasticSearchサーバーにあるpcs\_log, leaf, leaf\_load, leaf\_gridインデックスを133.71.106.141のElasticSearchサーバーにデータ移行して, 各インデックスのドキュメント数を移行元サーバーと移行先サーバーとの間で比較することで, データ移行が正常に行えたことを報告した.
 
 % pcs\_logインデックスは, 継続して133.71.201.197のElasticSearchサーバーにデータがインサートされているので, 恵村君が133.71.106.141のElasticSearchサーバーのpcs\_logインデックスにデータをインサートするようシステムの対応を行った時点で, 追加のデータ移行を行う必要がある.
 
-次回は, 以前CO\textsubscript{2}データを移行した際にElasticSearchのBulk APIを使用してデータ移行を行ったことが原因で, ラズベリーパイ上で実行しているCO\textsubscript{2}データのインサート用のプログラムから移行先のElasticSearchサーバーのインデックスにインサートが出来なくなった問題について, 以前データ移行を行ったpcs\_recyclekanインデックスについてもBulk APIを使用しており, 将来同じ問題が発生する可能性があるため, 解決方法を調査する.
+次回は, 以前CO\textsubscript{2}データを移行した際にElasticSearchのBulk APIを使用してデータ移行を行ったことが原因で, ラズベリーパイ上で実行しているCO\textsubscript{2}データのインサート用のプログラムから移行先のElasticSearchサーバーのインデックスにインサートが出来なくなった問題について, 原因の特定と解決方法の調査を行い報告する.
+
+% 以前データ移行を行ったpcs\_recyclekanインデックスについてもBulk APIを使用しており, 将来同じ問題が発生する可能性があるため,
 
 \begin{thebibliography}{5}
   \bibitem{1}Ferron H, ”ElasticDump”, https://github.com/elasticsearch-dump/elasticsearch-dump, 参照 June 19,2023.
