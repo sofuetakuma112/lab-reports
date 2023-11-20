@@ -103,8 +103,6 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     ports:
       - 9200:9200
     networks:
@@ -117,8 +115,6 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es01,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     networks:
       - elastic
   es03:
@@ -129,8 +125,6 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es01,es02
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     networks:
       - elastic
 
@@ -143,21 +137,21 @@ Listing \ref{sc1}のdocker-compose.ymlファイルで記述している内容に
 
 \subsubsection*{サービスの定義}
 \begin{itemize}
-  \item \textbf{es01, es02, es03}: これらはElasticsearchのノード（サーバー）である. 各ノードは異なるコンテナとして定義されている. `es01`, `es02`, `es03`はそれぞれ異なるコンテナ名で, Elasticsearchの異なるインスタンスを実行する.
+  \item \textbf{es01, es02, es03}: これらはElasticsearchのノード（サーバー）である. 各ノードは異なるコンテナとして定義されている. es01, es02, es03はそれぞれ異なるコンテナ名で, Elasticsearchの異なるインスタンスを実行する.
 \end{itemize}
 
 \subsubsection*{各ノードの設定}
 \begin{itemize}
   \item \textbf{image}: 使用するDockerイメージ. ここではElasticsearchの7.17.9バージョンを使用している.
   \item \textbf{container\_name}: コンテナに割り当てられる名前.
-  \item \textbf{environment}: 環境変数の設定. Elasticsearchのクラスタ設定, メモリ設定などを含む.
-  \item \textbf{ports}: ホストマシンとコンテナ間のポートマッピング. 例えば, `9200:9200`はホストの9200ポートをコンテナの9200ポートにマッピングする.
-  \item \textbf{networks}: コンテナ間通信のためのネットワーク設定. ここでは`elastic`ネットワークが使用されている.
+  \item \textbf{environment}: 環境変数の設定. Elasticsearchのクラスタ設定を含む.
+  \item \textbf{ports}: ホストマシンとコンテナ間のポートマッピング. 例えば, `9200:9200`はホストマシンの9200ポートをコンテナの9200ポートにマッピングする.
+  \item \textbf{networks}: コンテナ間通信のためのネットワーク設定. ここではelasticネットワークが使用されている.
 \end{itemize}
 
 \subsubsection*{ボリュームとネットワークの設定}
 \begin{itemize}
-  \item \textbf{networks}: デフォルトのドライバであるbridgeドライバを使用する`elastic`ネットワークを定義している. これにより, 異なるコンテナが相互に通信できるようになる.
+  \item \textbf{networks}: デフォルトのドライバであるbridgeドライバを使用するelasticネットワークを定義している. これにより, 異なるコンテナが相互に通信できるようになる.
 \end{itemize}
 
 この設定により, Elasticsearchの3ノードを含むクラスタがDocker上で動作するようセットアップされる.
@@ -174,11 +168,11 @@ docker compose up -dコマンドを実行した後, curlコマンドを使用し
   \end{center}
 \end{figure}
 
-図 \ref{p1}より, 3つのノード（`es01`, `es02`, `es03`）すべてが正常にクラスタに参加できていることが確認できる.
+図 \ref{p1}より, 3つのノード（es01, es02, es03）すべてが正常にクラスタに参加できていることが確認できる.
 
 \subsection{異なるバージョンのElasticsearchを使用したクラスタ構成 (2ノード バージョン 7.17.9, 1ノード バージョン 7.17.6)}
 
-Listing \ref{sc1}のdocker-compose.ymlをListing \ref{sc2}のように変更することで, es03のノードで使用するElasticsearchのバージョンを7.17.9から7.17.6に変更する.
+Listing \ref{sc1}のdocker-compose.ymlのes03のコンテナが使用するDockerイメージをListing \ref{sc2}に変更することで, es03のノードで使用するElasticsearchのバージョンを7.17.9から7.17.6に変更する.
 
 \begin{lstlisting}[caption=Listing \ref{sc1}のdocker-compose.ymlから変更を加えた箇所, label=sc2]
 version: '2.2'
@@ -203,7 +197,7 @@ services:
   \end{center}
 \end{figure}
 
-図 \ref{p2}より, バージョンが7.17.9である2つのノード（`es01`, `es02`）のみが正常にクラスタに参加できていることが確認できる.
+図 \ref{p2}より, バージョンが7.17.9である2つのノード（es01, es02）のみが正常にクラスタに参加できていることが確認できる.
 
 また, Elasticsearch起動時に出力されたログを確認したところ, 図 \ref{p3}に示すように, クラスタに参加できなかったes03のコンテナでElasticsearchがエラーログを出力して終了していることが分かった.
 
