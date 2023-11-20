@@ -42,15 +42,50 @@
 \end{flushright}
 
 \section{概要}
-今回は, Docker Compose を使用して, 異なるバージョンである7.17.6 と 7.17.9 の Elasticsearch ノードをクラスタリングすることが可能かどうかを確認するために実施した実験について説明する.
+リサイクル館の太陽光パネルの計測データを保存しているElasticSearchシステム(133.71.201.197)はバージョン7.17.6であり, CO\textsubscript{2}データを保存しているElasticSearchシステム(133.71.106.141, 133.71.106.170, 133.71.106.136)はバージョン7.17.9である.
 
-クラスタの構築には, Docker Composeを使用した.
+そこで今回は, Docker Compose を使用して, 異なるバージョンである7.17.6 と 7.17.9 の Elasticsearch ノードをクラスタリングすることが可能かどうかを確認するために実施した実験結果について報告する.
 
 \section{Dockerとは}
-Dockerは, アプリケーションをコンテナと呼ばれる隔離された環境で実行するためのツールである. コンテナは軽量で, システムリソースを共有し, それぞれが独自のファイルシステム, プロセス空間, メモリなどを持っている. これにより, 異なる環境で同じアプリケーションを一貫して実行できる.
+Dockerは, コンテナと呼ばれる軽量で独立したコンテナ型仮想環境用のプラットフォームである.
+
+従来の仮想化では, VMWareなどの仮想化ソフトウェアを用いて, ホストOS上にゲストOSを構築する形式だった.
+しかし, DockerはホストOS上にゲストOSなしで独立したコンテナ型の仮想環境として構築される.
+Dockerコンテナを利用する場合は, Docker Engineをインストールすることでコンテナの立ち上げ, 停止, 削除といった操作を行うことができる.
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=160mm]{docker-vmware.png}
+    \caption{仮想マシンとDockerの違い}
+    \label{p0}
+  \end{center}
+\end{figure}
+
+\subsection{コンテナとは}
+
+コンテナは, アプリケーションとそのすべての依存関係（ライブラリ, 実行環境など）をカプセル化した軽量な実行単位である.
+Dockerの場合, コンテナの作成にはDockerイメージが必要となる.
+
+\subsection{Dockerイメージとは}
+
+Dockerイメージとは, Dockerコンテナを作成するためのテンプレートであり, アプリケーションの実行に必要なコード, ライブラリ, 環境変数, 設定ファイルなどを含んでいる.
+
+Dockerイメージからコンテナを起動すると, そのイメージのインスタンスが動作し, アプリケーションが実行される. イメージはコンテナの基盤となる静的な部分であり, コンテナはそのイメージを実行時に動的に展開したものと考えることができる.
+
+DockerイメージはDocker Hubやその他のレジストリで共有されており, これらのサービスから取得することが可能である.
+
+今回はElasticSearchの開発元であるElastic社が提供しているElasticSearchのDockerイメージを使って検証を行う.
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=160mm]{elasticsearch-image.png}
+    \caption{ElasticSearchのDockerイメージ}
+    \label{s0}
+  \end{center}
+\end{figure}
 
 \section{Docker Composeとは}
-Docker Composeは, 複数のコンテナを定義し, 実行するためのツールである. これはYAMLファイルを使用して設定され, 複数のコンテナを使用したシステムの構築を単純化する.
+Docker Composeは, 複数のコンテナを定義し, 実行するためのツールである. これはYAMLファイルを使用して設定され, 複数のコンテナで協調して動作するアプリケーションの開発を単純化する.
 
 \section{実験セットアップ}
 \subsection{全て同じバージョンのElasticSearchを使用したクラスタ構成 (全ノード バージョン 7.17.9)}
@@ -70,10 +105,6 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
@@ -90,10 +121,6 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     volumes:
       - data02:/usr/share/elasticsearch/data
     networks:
@@ -108,10 +135,6 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     volumes:
       - data03:/usr/share/elasticsearch/data
     networks:
@@ -139,19 +162,18 @@ Listing \ref{sc1}のdocker-compose.ymlファイルで記述している内容に
 
 \subsubsection*{各ノードの設定}
 \begin{itemize}
-  \item \textbf{image}: 使用するDockerイメージ。ここではElasticsearchの7.17.9バージョンを使用している. 
-  \item \textbf{container\_name}: コンテナに割り当てられる名前。
-  \item \textbf{environment}: 環境変数の設定。Elasticsearchのクラスタ設定, メモリ設定などを含みます。
-  \item \textbf{ulimits}: メモリロックの限界を設定。これによりElasticsearchがメモリを効率的に利用できる.
-  \item \textbf{volumes}: データ永続化のためのボリュームマウント。データをコンテナの外に保存する.
-  \item \textbf{ports}: ホストマシンとコンテナ間のポートマッピング。例えば, `9200:9200`はホストの9200ポートをコンテナの9200ポートにマッピングする.
-  \item \textbf{networks}: コンテナ間通信のためのネットワーク設定。ここでは`elastic`ネットワークが使用されている. 
+  \item \textbf{image}: 使用するDockerイメージ. ここではElasticsearchの7.17.9バージョンを使用している.
+  \item \textbf{container\_name}: コンテナに割り当てられる名前.
+  \item \textbf{environment}: 環境変数の設定. Elasticsearchのクラスタ設定, メモリ設定などを含む.
+  \item \textbf{volumes}: データ永続化のためのボリュームマウント. データをコンテナの外に保存する.
+  \item \textbf{ports}: ホストマシンとコンテナ間のポートマッピング. 例えば, `9200:9200`はホストの9200ポートをコンテナの9200ポートにマッピングする.
+  \item \textbf{networks}: コンテナ間通信のためのネットワーク設定. ここでは`elastic`ネットワークが使用されている.
 \end{itemize}
 
 \subsubsection*{ボリュームとネットワークの設定}
 \begin{itemize}
   \item \textbf{volumes}: `data01`, `data02`, `data03`はデータの永続化に使用されるボリュームである. これによりコンテナが削除されてもデータが保持される.
-  \item \textbf{networks}: `elastic`ネットワークはブリッジドライバを使用している. これにより, 異なるコンテナが相互に通信できるようになる.
+  \item \textbf{networks}: `elastic`ネットワークはデフォルトのブリッジドライバを使用している. これにより, 異なるコンテナが相互に通信できるようになる.
 \end{itemize}
 
 この設定により, Elasticsearchの3ノードを含むクラスタがDocker上で動作するようセットアップされる.
@@ -167,14 +189,6 @@ docker compose up -dコマンドを実行した後, curlコマンドを使用し
     \label{p1}
   \end{center}
 \end{figure}
-
-% \begin{lstlisting}[caption=クラスタに参加しているノードを一覧表示した結果, label=re1]
-% $ curl -X GET "localhost:9200/_cat/nodes?v=true&pretty"
-%   ip         heap.percent ram.percent cpu load_1m load_5m load_15m node.role   master name
-%   172.22.0.3           26          14  34    3.35    2.84     2.88 cdfhilmrstw *      es02
-%   172.22.0.4           15          14  36    3.35    2.84     2.88 cdfhilmrstw -      es01
-%   172.22.0.2           15          14  37    3.35    2.84     2.88 cdfhilmrstw -      es03
-% \end{lstlisting}
 
 図 \ref{p1}より, 3つのノード（`es01`, `es02`, `es03`）すべてが正常にクラスタに参加できていることが確認できる.
 
@@ -207,15 +221,25 @@ services:
 
 図 \ref{p2}より, バージョンが7.17.9である2つのノード（`es01`, `es02`）のみが正常にクラスタに参加できていることが確認できる.
 
+また, ElasticSearch起動時に出力されたログを確認したところ, 図 \ref{p3}に示すように, クラスタに参加できなかったes03のコンテナでElasticSearchがエラーログを出力して終了していることが分かった.
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=160mm]{log.png}
+    \caption{es03のログ}
+    \label{p3}
+  \end{center}
+\end{figure}
+
 \section{まとめ}
 今回は, Docker Compose を使用して, 異なるバージョンである7.17.6 と 7.17.9 の Elasticsearch ノードをクラスタリングすることが可能かどうかを確認した.
 
-今回の実験により, Docker Compose を使用した Elasticsearch ノードのクラスタリングは, 全てのノードが同じバージョンであれば行えることが実証された. しかし, 異なるマイナーバージョン（今回は7.17.6と7.17.9）のノードをクラスタ化しようとすると, 古いバージョンのノードはクラスタに参加できなかった.
+今回の実験により, 全てのノードが同じ7.17.9バージョンであればクラスタリングを行えることが確認できた. しかし, 異なるマイナーバージョン（今回は7.17.6と7.17.9）のノードでクラスタを構築しようとすると, 古いバージョンのノードはクラスタに参加できなかった.
 
-そのため, サーバーゾーンでのリサイクル館の測定データを保存しているElasticSearchをバージョンアップする必要があり, 次回はElasticSearchのバージョンアップ方法について調査した結果を報告する.
+そのため, リサイクル館の測定データを保存しているElasticSearchをバージョンアップする必要があり, 次回はElasticSearchのバージョンアップ方法について調査した結果を報告する.
 
 \begin{thebibliography}{5}
-  \bibitem{1}Elasticsearch B.V., ”Install Elasticsearch with Docker | Elasticsearch Guide [7.17] | Elastic”, https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docker.html, 参照 Nov 17,2023.
+  \bibitem{1}Elasticsearch B.V.,\\ ”Install Elasticsearch with Docker | Elasticsearch Guide [7.17] | Elastic”, https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docker.html, 参照 Nov 17,2023.
 \end{thebibliography}
 
 \end{document}
