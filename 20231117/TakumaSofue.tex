@@ -44,7 +44,7 @@
 \section{概要}
 リサイクル館の太陽光パネルの計測データを保存しているElasticSearchシステム(133.71.201.197)はバージョン7.17.6であり, CO\textsubscript{2}データを保存しているElasticSearchシステム(133.71.106.141, 133.71.106.170, 133.71.106.136)はバージョン7.17.9である.
 
-そこで今回は, Docker Compose を使用して, 異なるバージョンである7.17.6 と 7.17.9 の Elasticsearch ノードをクラスタリングすることが可能かどうかを確認するために実施した実験結果について報告する.
+そこで今回は, Docker Compose を使用して, 異なるバージョンである7.17.6 と 7.17.9 の Elasticsearch ノードをクラスタリングすることが可能かどうかを確認するために実施した検証結果について報告する.
 
 \section{Dockerとは}
 Dockerは, コンテナと呼ばれる軽量で独立したコンテナ型仮想環境用のプラットフォームである.
@@ -56,7 +56,7 @@ Dockerコンテナを利用する場合は, Docker Engineをインストール�
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{docker-vmware.png}
-    \caption{仮想マシンとDockerの違い}
+    \caption{仮想マシンとDockerの違い \cite{2}}
     \label{p0}
   \end{center}
 \end{figure}
@@ -87,7 +87,7 @@ DockerイメージはDocker Hubやその他のレジストリで共有されて�
 \section{Docker Composeとは}
 Docker Composeは, 複数のコンテナを定義し, 実行するためのツールである. これはYAMLファイルを使用して設定され, 複数のコンテナで協調して動作するアプリケーションの開発を単純化する.
 
-\section{実験セットアップ}
+\section{検証環境のセットアップ}
 \subsection{全て同じバージョンのElasticSearchを使用したクラスタ構成 (全ノード バージョン 7.17.9)}
 
 Listing \ref{sc1}にクラスタを構成するのに使用したdocker-compose.ymlファイルの内容を記載する.
@@ -173,7 +173,7 @@ Listing \ref{sc1}のdocker-compose.ymlファイルで記述している内容に
 \subsubsection*{ボリュームとネットワークの設定}
 \begin{itemize}
   \item \textbf{volumes}: `data01`, `data02`, `data03`はデータの永続化に使用されるボリュームである. これによりコンテナが削除されてもデータが保持される.
-  \item \textbf{networks}: `elastic`ネットワークはデフォルトのブリッジドライバを使用している. これにより, 異なるコンテナが相互に通信できるようになる.
+  \item \textbf{networks}: デフォルトのドライバであるbridgeドライバを使用する`elastic`ネットワークを定義している. これにより, 異なるコンテナが相互に通信できるようになる.
 \end{itemize}
 
 この設定により, Elasticsearchの3ノードを含むクラスタがDocker上で動作するようセットアップされる.
@@ -234,12 +234,13 @@ services:
 \section{まとめ}
 今回は, Docker Compose を使用して, 異なるバージョンである7.17.6 と 7.17.9 の Elasticsearch ノードをクラスタリングすることが可能かどうかを確認した.
 
-今回の実験により, 全てのノードが同じ7.17.9バージョンであればクラスタリングを行えることが確認できた. しかし, 異なるマイナーバージョン（今回は7.17.6と7.17.9）のノードでクラスタを構築しようとすると, 古いバージョンのノードはクラスタに参加できなかった.
+今回の検証により, 全てのノードが同じ7.17.9バージョンであればクラスタリングを行えることが確認できた. しかし, 異なるマイナーバージョン（今回は7.17.6と7.17.9）のノードでクラスタを構築しようとすると, 古いバージョンのノードはクラスタに参加できなかった.
 
 そのため, リサイクル館の測定データを保存しているElasticSearchをバージョンアップする必要があり, 次回はElasticSearchのバージョンアップ方法について調査した結果を報告する.
 
 \begin{thebibliography}{5}
-  \bibitem{1}Elasticsearch B.V.,\\ ”Install Elasticsearch with Docker | Elasticsearch Guide [7.17] | Elastic”, https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docker.html, 参照 Nov 17,2023.
+  \bibitem{1}Elasticsearch B.V.,\\ ”Install Elasticsearch with Docker | Elasticsearch Guide [7.17] | Elastic”, https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docker.html, 参照 Nov 20,2023.
+  \bibitem{2}RAKUS Developers Blog, ”Dockerとは一体何なんだ？【初心者向け】 - RAKUS Developers Blog | ラクス エンジニアブログ”, https://tech-blog.rakus.co.jp/entry/20221007/docker, 参照 Nov 20,2023.
 \end{thebibliography}
 
 \end{document}
