@@ -5,6 +5,6 @@
 \BOOKMARK [2][-]{subsection.2.2}{Dockerイメージとは}{section.2}% 4
 \BOOKMARK [1][-]{section.3}{Docker Composeとは}{}% 5
 \BOOKMARK [1][-]{section.4}{検証環境のセットアップ}{}% 6
-\BOOKMARK [2][-]{subsection.4.1}{全て同じバージョンのElasticSearchを使用したクラスタ構成 \(全ノード バージョン 7.17.9\)}{section.4}% 7
-\BOOKMARK [2][-]{subsection.4.2}{異なるバージョンのElasticSearchを使用したクラスタ構成 \(2ノード バージョン 7.17.9, 1ノード バージョン 7.17.6\)}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.1}{全て同じバージョンのElasticsearchを使用したクラスタ構成 \(全ノード バージョン 7.17.9\)}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.2}{異なるバージョンのElasticsearchを使用したクラスタ構成 \(2ノード バージョン 7.17.9, 1ノード バージョン 7.17.6\)}{section.4}% 8
 \BOOKMARK [1][-]{section.5}{まとめ}{}% 9

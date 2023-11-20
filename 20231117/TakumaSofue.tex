@@ -42,7 +42,7 @@
 \end{flushright}
 
 \section{概要}
-リサイクル館の太陽光パネルの計測データを保存しているElasticSearchシステム(133.71.201.197)はバージョン7.17.6であり, CO\textsubscript{2}データを保存しているElasticSearchシステム(133.71.106.141, 133.71.106.170, 133.71.106.136)はバージョン7.17.9である.
+リサイクル館の太陽光パネルの計測データを保存しているElasticsearchシステム(133.71.201.197)はバージョン7.17.6であり, CO\textsubscript{2}データを保存しているElasticsearchシステム(133.71.106.141, 133.71.106.170, 133.71.106.136)はバージョン7.17.9である.
 
 そこで今回は, Docker Compose を使用して, 異なるバージョンである7.17.6 と 7.17.9 の Elasticsearch ノードをクラスタリングすることが可能かどうかを確認するために実施した検証結果について報告する.
 
@@ -74,12 +74,12 @@ Dockerイメージからコンテナを起動すると, そのイメージのイ
 
 DockerイメージはDocker Hubやその他のレジストリで共有されており, これらのサービスから取得することが可能である.
 
-今回はElasticSearchの開発元であるElastic社が提供しているElasticSearchのDockerイメージを使って検証を行う.
+今回はElasticsearchの開発元であるElastic社が提供しているElasticsearchのDockerイメージを使って検証を行う.
 
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{elasticsearch-image.png}
-    \caption{ElasticSearchのDockerイメージ}
+    \caption{ElasticsearchのDockerイメージ}
     \label{s0}
   \end{center}
 \end{figure}
@@ -88,11 +88,11 @@ DockerイメージはDocker Hubやその他のレジストリで共有されて�
 Docker Composeは, 複数のコンテナを定義し, 実行するためのツールである. これはYAMLファイルを使用して設定され, 複数のコンテナで協調して動作するアプリケーションの開発を単純化する.
 
 \section{検証環境のセットアップ}
-\subsection{全て同じバージョンのElasticSearchを使用したクラスタ構成 (全ノード バージョン 7.17.9)}
+\subsection{全て同じバージョンのElasticsearchを使用したクラスタ構成 (全ノード バージョン 7.17.9)}
 
 Listing \ref{sc1}にクラスタを構成するのに使用したdocker-compose.ymlファイルの内容を記載する.
 
-\begin{lstlisting}[caption=全て同じバージョンのElasticSearchを使用したクラスタを構成するdocker-compose.yml, label=sc1]
+\begin{lstlisting}[caption=全て同じバージョンのElasticsearchを使用したクラスタを構成するdocker-compose.yml, label=sc1]
 version: '2.2'
 services:
   es01:
@@ -105,8 +105,6 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-    volumes:
-      - data01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -121,8 +119,6 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-    volumes:
-      - data02:/usr/share/elasticsearch/data
     networks:
       - elastic
   es03:
@@ -135,18 +131,8 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-    volumes:
-      - data03:/usr/share/elasticsearch/data
     networks:
       - elastic
-
-volumes:
-  data01:
-    driver: local
-  data02:
-    driver: local
-  data03:
-    driver: local
 
 networks:
   elastic:
@@ -165,14 +151,12 @@ Listing \ref{sc1}のdocker-compose.ymlファイルで記述している内容に
   \item \textbf{image}: 使用するDockerイメージ. ここではElasticsearchの7.17.9バージョンを使用している.
   \item \textbf{container\_name}: コンテナに割り当てられる名前.
   \item \textbf{environment}: 環境変数の設定. Elasticsearchのクラスタ設定, メモリ設定などを含む.
-  \item \textbf{volumes}: データ永続化のためのボリュームマウント. データをコンテナの外に保存する.
   \item \textbf{ports}: ホストマシンとコンテナ間のポートマッピング. 例えば, `9200:9200`はホストの9200ポートをコンテナの9200ポートにマッピングする.
   \item \textbf{networks}: コンテナ間通信のためのネットワーク設定. ここでは`elastic`ネットワークが使用されている.
 \end{itemize}
 
 \subsubsection*{ボリュームとネットワークの設定}
 \begin{itemize}
-  \item \textbf{volumes}: `data01`, `data02`, `data03`はデータの永続化に使用されるボリュームである. これによりコンテナが削除されてもデータが保持される.
   \item \textbf{networks}: デフォルトのドライバであるbridgeドライバを使用する`elastic`ネットワークを定義している. これにより, 異なるコンテナが相互に通信できるようになる.
 \end{itemize}
 
@@ -192,9 +176,9 @@ docker compose up -dコマンドを実行した後, curlコマンドを使用し
 
 図 \ref{p1}より, 3つのノード（`es01`, `es02`, `es03`）すべてが正常にクラスタに参加できていることが確認できる.
 
-\subsection{異なるバージョンのElasticSearchを使用したクラスタ構成 (2ノード バージョン 7.17.9, 1ノード バージョン 7.17.6)}
+\subsection{異なるバージョンのElasticsearchを使用したクラスタ構成 (2ノード バージョン 7.17.9, 1ノード バージョン 7.17.6)}
 
-Listing \ref{sc1}のdocker-compose.ymlをListing \ref{sc2}のように変更することで, es03のノードで使用するElasticSearchのバージョンを7.17.9から7.17.6に変更する.
+Listing \ref{sc1}のdocker-compose.ymlをListing \ref{sc2}のように変更することで, es03のノードで使用するElasticsearchのバージョンを7.17.9から7.17.6に変更する.
 
 \begin{lstlisting}[caption=Listing \ref{sc1}のdocker-compose.ymlから変更を加えた箇所, label=sc2]
 version: '2.2'
@@ -221,7 +205,7 @@ services:
 
 図 \ref{p2}より, バージョンが7.17.9である2つのノード（`es01`, `es02`）のみが正常にクラスタに参加できていることが確認できる.
 
-また, ElasticSearch起動時に出力されたログを確認したところ, 図 \ref{p3}に示すように, クラスタに参加できなかったes03のコンテナでElasticSearchがエラーログを出力して終了していることが分かった.
+また, Elasticsearch起動時に出力されたログを確認したところ, 図 \ref{p3}に示すように, クラスタに参加できなかったes03のコンテナでElasticsearchがエラーログを出力して終了していることが分かった.
 
 \begin{figure}[H]
   \begin{center}
@@ -236,7 +220,7 @@ services:
 
 今回の検証により, 全てのノードが同じ7.17.9バージョンであればクラスタリングを行えることが確認できた. しかし, 異なるマイナーバージョン（今回は7.17.6と7.17.9）のノードでクラスタを構築しようとすると, 古いバージョンのノードはクラスタに参加できなかった.
 
-そのため, リサイクル館の測定データを保存しているElasticSearchをバージョンアップする必要があり, 次回はElasticSearchのバージョンアップ方法について調査した結果を報告する.
+そのため, リサイクル館の測定データを保存しているElasticsearchをバージョンアップする必要があり, 次回はElasticsearchのバージョンアップ方法について調査した結果を報告する.
 
 \begin{thebibliography}{5}
   \bibitem{1}Elasticsearch B.V.,\\ ”Install Elasticsearch with Docker | Elasticsearch Guide [7.17] | Elastic”, https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docker.html, 参照 Nov 20,2023.
