@@ -1,0 +1,8 @@
+%このファイルは日本語文字を含みます.
+\BOOKMARK [1][-]{section.1}{概要}{}% 1
+\BOOKMARK [1][-]{section.2}{バージョンアップ手順}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{インストール方法の特定}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{aptによるバージョンアップ}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{kibanaのバージョンアップ}{}% 5
+\BOOKMARK [1][-]{section.4}{バージョンアップ後の動作確認}{}% 6
+\BOOKMARK [1][-]{section.5}{まとめ}{}% 7
