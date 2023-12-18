@@ -164,8 +164,6 @@ networks:
 
 docker-composeを用いて3つのノードを起動した後, クラスタの情報について問い合わせた結果を図 \ref{p2-1}に示す.
 
-図 \ref{p1-1}, \ref{p2-1}より, クラスタAとクラスタBはそれぞれ異なるクラスタIDを付与されたことが分かる.
-
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{3nodes-cluster.png}
@@ -173,6 +171,20 @@ docker-composeを用いて3つのノードを起動した後, クラスタの情
     \label{p2-1}
   \end{center}
 \end{figure}
+
+図 \ref{p1-1}, \ref{p2-1}より, クラスタAとクラスタBはそれぞれ異なるクラスタIDを付与されたことが分かる.
+
+クラスタの起動後, クラスタに参加しているノードの一覧を取得した結果を図 \ref{p2-2}に示す.
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=160mm]{3nodes-list.png}
+    \caption{クラスタBの起動後, クラスタに参加しているノードの一覧を取得した結果}
+    \label{p2-2}
+  \end{center}
+\end{figure}
+
+図 \ref{p2-2}より, es01, es02, es03ノードが全てクラスタBに参加できていることが分かる.
 
 最後にノードを全てシャットダウンした.
 
