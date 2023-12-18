@@ -1,0 +1,7 @@
+%このファイルは日本語文字を含みます.
+\BOOKMARK [1][-]{section.1}{概要}{}% 1
+\BOOKMARK [1][-]{section.2}{手順}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{単一ノードで稼働するクラスタAの構築とシャットダウン}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{クラスタBの構築とシャットダウン}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{クラスタBへの参加試行}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{まとめ}{}% 6
