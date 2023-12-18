@@ -68,8 +68,6 @@ services:
     container_name: es04
     environment:
       - node.name=es04
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
       - discovery.type=single-node
     volumes:
       - data04:/usr/share/elasticsearch/data
@@ -122,8 +120,6 @@ services:
       - node.name=es01
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
@@ -137,8 +133,6 @@ services:
       - node.name=es02
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     volumes:
       - data02:/usr/share/elasticsearch/data
     networks:
@@ -150,8 +144,6 @@ services:
       - node.name=es03
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     volumes:
       - data03:/usr/share/elasticsearch/data
     networks:
@@ -172,6 +164,8 @@ networks:
 
 docker-composeを用いて3つのノードを起動した後, クラスタの情報について問い合わせた結果を図 \ref{p2-1}に示す.
 
+図 \ref{p1-1}, \ref{p2-1}より, クラスタAとクラスタBはそれぞれ異なるクラスタIDを付与されたことが分かる.
+
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=160mm]{3nodes-cluster.png}
@@ -187,6 +181,8 @@ docker-composeを用いて3つのノードを起動した後, クラスタの情
 次に, Listing \ref{sc2}のdocker-compose.ymlに, クラスタAのノード(es04)を追加し, 合計4ノードでクラスタBを起動する.
 
 Listing \ref{sc3}に, 合計4ノードでクラスタBを起動する際に使用したdocker-compose.ymlを示す.
+
+% Listing \ref{sc3}のes04コンテナでは, Listing \ref{sc1}でes04コンテナに指定したボリュームと同一のボリュームをボリュームマウントに指定しているため, 
 
 \begin{figure}[H]
   \begin{center}
@@ -206,8 +202,6 @@ services:
       - node.name=es01
       - discovery.seed_hosts=es01,es02,es03,es04
       - cluster.initial_master_nodes=es01,es02,es03,es04
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
@@ -221,8 +215,6 @@ services:
       - node.name=es02
       - discovery.seed_hosts=es01,es02,es03,es04
       - cluster.initial_master_nodes=es01,es02,es03,es04
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     volumes:
       - data02:/usr/share/elasticsearch/data
     networks:
@@ -234,8 +226,6 @@ services:
       - node.name=es03
       - discovery.seed_hosts=es01,es02,es03,es04
       - cluster.initial_master_nodes=es01,es02,es03,es04
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     volumes:
       - data03:/usr/share/elasticsearch/data
     networks:
@@ -247,8 +237,6 @@ services:
       - node.name=es04
       - discovery.seed_hosts=es01,es02,es03,es04
       - cluster.initial_master_nodes=es01,es02,es03,es04
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     volumes:
       - data04:/usr/share/elasticsearch/data
     networks:
