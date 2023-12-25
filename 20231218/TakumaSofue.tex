@@ -302,8 +302,10 @@ es04コンテナ（クラスタAのノード）で出力されたログの一部
 
 したがって, リサイクル館の太陽光パネルの計測データが保存されたElasticsearchノードをクラスタに参加させるには以下の2通りの方法が考えられる.
 
-1. リサイクル館の太陽光パネルの計測データが保存されたElasticsearchノードのバックアップを取り, ノードに保存されたインデックスやドキュメントのデータを削除した上で, CO\textsubscript{2}データなどが保存されたクラスタに新しいノードとして参加させる
-2. CO\textsubscript{2}データなどが保存されたクラスタとは別で, サーバーゾーンに新たにクラスタを構築する.
+\begin{itemize}
+  \item リサイクル館の太陽光パネルの計測データが保存されたElasticsearchノードのバックアップを取り, ノードに保存されたインデックスやドキュメントのデータを削除した上で, CO\textsubscript{2}データなどが保存されたクラスタに新しいノードとして参加させる
+  \item CO\textsubscript{2}データなどが保存されたクラスタとは別で, サーバーゾーンに新たにクラスタを構築する. クラスタの構築にはリサイクル館の太陽光パネルの計測データが保存されたElasticsearchノードが所属するクラスタを使用する.
+\end{itemize}
 
 \begin{thebibliography}{5}
   \bibitem{1}Elasticsearch B.V., ”Data node's cluster uuid diffrent from master node's cluster uuid”, https://discuss.elastic.co/t/data-node-s-cluster-uuid-diffrent-from-master-nodes-cluster-uuid/196737, 参照 Dec 18,2023.
